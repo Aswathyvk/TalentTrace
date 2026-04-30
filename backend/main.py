@@ -1,9 +1,10 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
 import uuid
 from parser import extract_text_from_pdf, extract_sections
+from scorer import compute_match_score
 
 # Create the FastAPI app
 app = FastAPI(
@@ -65,4 +66,51 @@ async def upload_resume(file: UploadFile = File(...)):
         "sections": sections,
         "character_count": len(extracted_text),
         "word_count": len(extracted_text.split())
+    }
+
+@app.post("/match")
+async def match_resume(
+    file: UploadFile = File(...),
+    job_description: str = Form(...)
+):
+    """
+    Accepts a resume PDF + job description text.
+    Returns match score, matched skills, missing skills, and suggestions.
+    """
+
+    # 1. Validate file
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
+
+    # 2. Save temporarily
+    unique_filename = f"{uuid.uuid4()}_{file.filename}"
+    file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # 3. Extract resume text
+    try:
+        resume_text = extract_text_from_pdf(file_path)
+    except Exception as e:
+        os.remove(file_path)
+        raise HTTPException(status_code=500, detail=f"Failed to parse PDF: {str(e)}")
+
+    # 4. Clean up temp file
+    os.remove(file_path)
+
+    # 5. Calculate match score
+    result = compute_match_score(resume_text, job_description)
+
+    return {
+        "filename": file.filename,
+        "job_description_preview": job_description[:200] + "...",
+        "match_score": result["match_score"],
+        "skill_score": result["skill_score"],
+        "semantic_score": result["semantic_score"],
+        "matched_skills": result["matched_skills"],
+        "missing_skills": result["missing_skills"],
+        "total_jd_skills": result["total_jd_skills"],
+        "total_resume_skills": result["total_resume_skills"],
+        "suggestions": result["suggestions"]
     }
