@@ -4,7 +4,7 @@ import shutil
 import os
 import uuid
 from parser import extract_text_from_pdf, extract_sections
-from scorer import compute_match_score
+from scorer import calculate_match_score
 
 # Create the FastAPI app
 app = FastAPI(
@@ -100,7 +100,7 @@ async def match_resume(
     os.remove(file_path)
 
     # 5. Calculate match score
-    result = compute_match_score(resume_text, job_description)
+    result = calculate_match_score(resume_text, job_description)
 
     return {
         "filename": file.filename,
@@ -112,5 +112,8 @@ async def match_resume(
         "missing_skills": result["missing_skills"],
         "total_jd_skills": result["total_jd_skills"],
         "total_resume_skills": result["total_resume_skills"],
-        "suggestions": result["suggestions"]
+        "suggestions": result["suggestions"],
+        "ats_score": result["ats_score"],
+        "ats_warnings": result["ats_warnings"],
+        "experience_level": result["experience_level"],
     }
