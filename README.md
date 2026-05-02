@@ -11,7 +11,7 @@ AI-Powered Resume Screener & Job Match App
 - [x] NLP skill extraction
 - [x] Resume vs Job Description matching
 - [x] Skill gap analysis
-- [ ] React dashboard
+- [x] React dashboard
 
 ## Run Locally
 cd backend
