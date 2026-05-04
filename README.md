@@ -1,19 +1,39 @@
 # TalentTrace 🎯
-AI-Powered Resume Screener & Job Match App
+AI-Powered Resume Screener & Job Match Analyzer
 
-## Tech Stack
-- Backend: Python, FastAPI
-- NLP: spaCy, sentence-transformers (coming in Week 2)
-- Frontend: React + Tailwind CSS (coming in Week 4)
+## 🚀 Live Demo
+- Frontend: (coming soon - Vercel)
+- Backend API: (coming soon - Render)
 
-## Features (In Progress)
-- [x] PDF resume upload and text extraction
-- [x] NLP skill extraction
-- [x] Resume vs Job Description matching
-- [x] Skill gap analysis
-- [x] React dashboard
+## 🛠️ Tech Stack
+- **Backend:** Python, FastAPI
+- **NLP:** spaCy, sentence-transformers
+- **ML:** scikit-learn
+- **Frontend:** React, Recharts
+- **PDF Parsing:** pdfplumber
 
-## Run Locally
+## ✨ Features
+- 📄 PDF resume upload and text extraction
+- 🤖 AI-powered resume vs job description matching
+- 📊 Match score, skill score, semantic score
+- 🔍 Skill gap analysis (matched vs missing skills)
+- 🤖 ATS compatibility score
+- 💡 Improvement suggestions
+- 📈 Visual score breakdown charts
+- 🎯 Experience level detection (Fresher/Mid/Senior)
+
+## 🏃 Run Locally
+
+### Backend
+```bash
 cd backend
 uvicorn main:app --reload
+```
 Visit http://localhost:8000/docs
+
+### Frontend
+```bash
+cd frontend/talenttrace-ui
+npm start
+```
+Visit http://localhost:3000
